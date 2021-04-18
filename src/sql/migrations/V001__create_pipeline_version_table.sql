@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS ml_pipeline
+(
+    id SERIAL PRIMARY KEY,
+    pipeline_version varchar(32) NOT NULL UNIQUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

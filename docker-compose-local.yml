@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  rest_ml:
+    container_name: rest_ml
+    build:
+      context: ./docker
+      dockerfile: ./Dockerfile-local
+    image: rest_ml:latest
+    env_file: .env
+    volumes:
+      - ./src:/ml_app
+    networks:
+      - rest_ml
+    labels:
+      service: "rest_ml"
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+      - flyway
+    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--debug", "--port", "80", "--reload-dir", "/ml_app"]
+
+  postgres:
+    restart: always
+    container_name: rest_ml_postgres
+    image: postgres:11.2-alpine
+    environment:
+      - POSTGRES_DB=rest_ml
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - rest_ml
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    labels:
+      service: "rest_ml"
+
+  flyway:
+    image: flyway/flyway:7.5-alpine
+    container_name: rest_ml_flyway
+    command: -url=jdbc:postgresql://postgres:5432/rest_ml -user=${DB_USER} -password=${DB_PASSWORD} -connectRetries=60 migrate
+    volumes:
+      - ./src/sql/migrations:/flyway/sql
+    depends_on:
+      - postgres
+    networks:
+      - rest_ml
+    labels:
+      service: "rest_ml"
+
+networks:
+  rest_ml:
