@@ -6,7 +6,7 @@ This is an example of Machine Learning REST API application for online predictio
 * How to improve the health check endpoint for a Machine Learning service;
 * How to split and organize production and local development;
 
-You can find the full article on Medium.
+You can find the full [article on Medium](https://danylo-baibak.medium.com/machine-learning-service-for-real-time-prediction-9f18d585a5e0).
 
 ## Installation
 * Run `make init`;
