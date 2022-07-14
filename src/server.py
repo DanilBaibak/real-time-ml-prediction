@@ -6,7 +6,7 @@ from typing import Dict, Any
 from fastapi import FastAPI, status, Response
 from fastapi.responses import JSONResponse
 
-from utils.helpers import get_latest_ml_pipeline_version, convert_item_to_df, save_prediction
+from utils.helpers import get_latest_ml_pipeline_version, convert_item_to_df, save_prediction, check_db_availability
 from models.item_model import Item
 from scripts.training import ML_PIPELINES_PATH
 
@@ -26,20 +26,28 @@ app = FastAPI(docs_url=docs_url)
 
 
 @app.get('/health')
-def health_check():
+async def health_check():
     content = {'Server status': 'Ok', 'DB connection': 'Ok'}
 
-    # check DB connection and get the latest ML pipeline version
+    # check DB connection
     try:
-        ml_pipeline_version = get_latest_ml_pipeline_version()
+        is_db_available = await check_db_availability()
+        if len(is_db_available) == 0:
+            content['DB connection'] = 'DB unavailable'
     except Exception:
         content['DB connection'] = 'DB unavailable'
         return JSONResponse(content=content)
 
-    # check if the ML pipeline exists
-    if os.path.isfile(os.path.join(ML_PIPELINES_PATH, f'pipeline_{ml_pipeline_version}.pickle')):
-        content['ML pipeline'] = 'Ok' if os.getenv('ENV') == ENV_LIVE else ml_pipeline_version
-    else:
+    # check the latest ML pipeline version
+    try:
+        ml_pipeline_version = get_latest_ml_pipeline_version()
+
+        # check if the ML pipeline exists
+        if os.path.isfile(os.path.join(ML_PIPELINES_PATH, f'pipeline_{ml_pipeline_version}.pickle')):
+            content['ML pipeline'] = 'Ok' if os.getenv('ENV') == ENV_LIVE else ml_pipeline_version
+        else:
+            content['ML pipeline'] = 'ML pipeline unavailable'
+    except Exception:
         content['ML pipeline'] = 'ML pipeline unavailable'
 
     return JSONResponse(content=content)

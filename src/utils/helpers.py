@@ -38,3 +38,7 @@ def convert_item_to_df(item: Item) -> pd.DataFrame:
         items[key] = [value]
 
     return pd.DataFrame(items)
+
+
+async def check_db_availability():
+    return execute_query("SELECT 1 from pg_database WHERE datname='rest_ml'")
