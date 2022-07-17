@@ -32,11 +32,8 @@ jobs:
           # exit-zero treats all errors as warnings.
           flake8 ./src --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
       - name: Static typing
-        run: |
-          mypy --no-warn-no-return --ignore-missing-imports ./src
-      # - name: Set pythonpath
-      #   run: echo "PYTHONPATH=src/" >> $GITHUB_ENV
+        run: mypy --no-warn-no-return --ignore-missing-imports ./src
       - name: Test
-        run: cd src && pytest tests
         env:
-          PYTHONPATH: "src/"
+          PYTHONPATH: "${PYTHONPATH}:/src"
+        run: cd src && pytest tests
