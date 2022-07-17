@@ -33,4 +33,4 @@ jobs:
         run: |
           mypy --no-warn-no-return --ignore-missing-imports ./src
       - name: Test
-        run cd src && pytest tests
+        run: cd src && pytest tests
