@@ -31,7 +31,7 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     execute_query(query, row)
 
 
-def convert_item_to_df(item: Item) -> pd.DataFrame:
+async def convert_item_to_df(item: Item) -> pd.DataFrame:
     """Convert Item to the pandas DataFrame"""
     items = {}
     for key, value in item.dict().items():
