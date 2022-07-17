@@ -35,7 +35,7 @@ jobs:
       - name: Static typing
         run: |
           mypy --no-warn-no-return --ignore-missing-imports ./src
-      - name: set pythonpath
-        run: echo "PYTHONPATH=src/" >> $GITHUB_ENV
+      # - name: Set pythonpath
+      #   run: echo "PYTHONPATH=src/" >> $GITHUB_ENV
       - name: Test
         run: cd src && pytest tests
