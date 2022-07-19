@@ -34,6 +34,6 @@ jobs:
       - name: Static typing
         run: mypy --no-warn-no-return --ignore-missing-imports ./src
       - name: Test
-        env:
-          PYTHONPATH: "${PYTHONPATH}:/src"
-        run: cd src && pytest tests
+       # env:
+       #   PYTHONPATH: "${PYTHONPATH}:/src"
+        run: cd src && export PYTHONPATH="${PYTHONPATH}:/src" && echo $PYTHONPATH  && pytest tests
