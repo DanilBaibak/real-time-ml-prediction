@@ -130,5 +130,6 @@ dmypy.json
 
 
 .idea/
-src/ml_pipelines
 .env
+src/ml_pipelines/*
+!src/ml_pipelines/.gitkeep 

@@ -73,7 +73,7 @@ async def predict(item: Item, response: Response):
                                 status_code=status.HTTP_404_NOT_FOUND)
 
     # make prediction
-    df = convert_item_to_df(item)
+    df = await convert_item_to_df(item)
     prediction = CACHE['ml_pipeline'].predict(df)[0]
 
     # save features + prediction + pipeline version
